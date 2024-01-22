@@ -919,6 +919,8 @@ func (w *worker) commitTransactions(env *environment, txs *transactionsByPriceAn
 
 	EnableMVHashMap := w.chainConfig.IsCancun(env.header.Number)
 
+	fmt.Println("\nPSP - EnableMVHashMap", EnableMVHashMap)
+
 	// create and add empty mvHashMap in statedb
 	if EnableMVHashMap {
 		depsMVReadList = [][]blockstm.ReadDescriptor{}
@@ -1099,6 +1101,7 @@ mainloop:
 
 	// nolint:nestif
 	if EnableMVHashMap && w.IsRunning() {
+		fmt.Println("PSP - Post Cancun")
 		close(chDeps)
 		depsWg.Wait()
 
@@ -1124,6 +1127,7 @@ mainloop:
 
 				if ok1 || ok2 {
 					delayFlag = false
+					break
 				}
 
 				for j := range deps[i] {
@@ -1144,6 +1148,8 @@ mainloop:
 		} else {
 			blockExtraData.TxDependency = nil
 		}
+
+		fmt.Println("PSP - (mining) TxDependency", blockExtraData.TxDependency)
 
 		blockExtraDataBytes, err := rlp.EncodeToBytes(blockExtraData)
 		if err != nil {
