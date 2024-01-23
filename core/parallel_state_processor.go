@@ -285,7 +285,6 @@ func (p *ParallelStateProcessor) Process(block *types.Block, statedb *state.Stat
 	coinbase, _ := p.bc.Engine().Author(header)
 
 	blockTxDependency := block.GetTxDependency()
-	fmt.Println("PSP - (verifying) TxDependency", blockTxDependency)
 
 	deps := GetDeps(blockTxDependency)
 
