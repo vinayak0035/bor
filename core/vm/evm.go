@@ -18,6 +18,7 @@ package vm
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 	"sync/atomic"
 
@@ -496,11 +497,15 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 
 	// Check whether the max code size has been exceeded, assign err if the case.
 	if err == nil && evm.chainRules.IsEIP158 {
+		fmt.Println("\nPSP", len(ret), params.MaxCodeSize, params.MaxCodeSizePostAhmedabad)
 		if evm.chainConfig.Bor != nil && evm.chainConfig.Bor.IsAhmedabad(evm.Context.BlockNumber) {
+			fmt.Println("PSP post ahmedabad")
 			if len(ret) > params.MaxCodeSizePostAhmedabad {
+				fmt.Println("PSP len(ret) > params.MaxCodeSizePostAhmedabad", len(ret) > params.MaxCodeSizePostAhmedabad)
 				err = ErrMaxCodeSizeExceeded
 			}
 		} else if len(ret) > params.MaxCodeSize {
+			fmt.Println("PSP len(ret) > params.MaxCodeSize", len(ret) > params.MaxCodeSize)
 			err = ErrMaxCodeSizeExceeded
 		}
 	}
